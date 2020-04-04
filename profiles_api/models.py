@@ -24,6 +24,7 @@ class UserProfileManager(BaseUserManager):
 
         user.is_superuser = True
         user.is_doctor= True
+        user.is_staff=True
         user.save(using=self._db)
 
         return user
@@ -37,6 +38,7 @@ class UserProfile(AbstractBaseUser,PermissionsMixin):
     gender = models.CharField(max_length=50,choices = (("male","Male"),("female","Female")))
     date_added =models.DateTimeField(auto_now_add=True)
     is_doctor = models.BooleanField()
+    is_staff = models.BooleanField(default=False)
 
 
 
@@ -72,4 +74,20 @@ class ProfileVitals(models.Model):
     assign_to = models.ForeignKey(UserProfile,default=None,on_delete=models.SET_NULL,null=True,related_name='doctor_id')
 
     def __str__(self):
-        return str(id)
+        return str(self.id)
+class ActualVitals(models.Model):
+    """Store actual vitals of user for cross referencing"""
+    user_profile = models.ForeignKey(
+    settings.AUTH_USER_MODEL,
+    on_delete=models.CASCADE
+    )
+    heart_rate = models.FloatField(default=-1)
+    spo2 = models.FloatField(default=-1)
+    breathing_rate = models.FloatField(default=-1)
+    blood_pressure = models.CharField(max_length=15,default=None)
+    date_added = models.DateTimeField(auto_now_add=True)
+    equipment = models.CharField(max_length=255,default=None)
+    comments = models.CharField(max_length=255,default=None)
+
+    def __str__(self):
+        return str(self.id)

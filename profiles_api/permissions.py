@@ -16,4 +16,7 @@ class UpdateOwnVitals(permissions.BasePermission):
         """Check if the user is trying to update their own status"""
         if request.method in permissions.SAFE_METHODS:
             return True
-        return obj.user_profile.id== request.user.id
+        elif request.user.is_doctor==True:
+            return True
+        else:
+            return obj.user_profile.id== request.user.id

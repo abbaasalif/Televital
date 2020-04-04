@@ -6,7 +6,7 @@ class HelloSerializer(serializers.Serializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserProfile
-        fields = ('id','email','name','height','weight','age','gender','date_added','is_doctor','password')
+        fields = ('id','email','name','height','weight','age','gender','date_added','is_doctor','is_staff','password')
         extra_kwargs = {
         'password':{
         'write_only':True,
@@ -49,3 +49,10 @@ class ProfileVitalsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ProfileVitals
         fields=('id','user_profile','heart_rate','spo2','breathing_rate','blood_pressure','is_evaluated','assign_to','date_added')
+        extra_kwargs = {'user_profile':{'read_only':True}}
+class ActualVitalsSerializer(serializers.ModelSerializer):
+    """Serialises the actual vitals"""
+    class Meta:
+        model = models.ActualVitals
+        fields=('id','user_profile','heart_rate','spo2','breathing_rate','blood_pressure','equipment','comments','date_added')
+        extra_kwargs = {'user_profile':{'read_only':True}}
